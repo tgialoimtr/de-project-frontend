@@ -1,0 +1,16 @@
+.testselect {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.test {
+    /* display: inline-block; */
+    width:70% !important;
+    height:1000px !important;
+}
+
+.question {
+    padding:10px;
+}

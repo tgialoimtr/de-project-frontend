@@ -1,0 +1,6 @@
+#chart {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  align-content: space-around;
+}
