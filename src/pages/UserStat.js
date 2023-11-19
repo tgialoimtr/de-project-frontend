@@ -14,18 +14,19 @@ function toUTC(epoch) {
 
 function udChart(arr, chartname, setData, setLayout) {
     const valCol = 'correct rate'
-    const baseCol = 'last try'
+    // const baseCol = 'problem'
     setData([{
-            y: arr.map(x => toUTC(x['last_try'])),
+            y: arr.map(x => x['name'] || x['exercise'] || x['area'] || x['topic']),
             x: arr.map(x => x['correct']/x['num_done']),
-            text: arr.map(x => x['name'] || x['exercise'] || x['area'] || x['topic']),
-            type: "scatter",
+            text: arr.map(x => Math.round(x['correct']/x['num_done']*100)/100),
+            type: "bar",
             orientation: "h",
             mode: 'lines+markers+text',
-            marker: {color: 'red'},
+            marker: {color: 'blue'},
           }]);
     setLayout({  xaxis: {title: valCol},
-    yaxis: {title: baseCol},title: chartname, autosize: true} )
+    // yaxis: {title: vertical_name},
+    title: chartname, autosize: true} )
 }
 
 function popoutChild(arr, valCol, setDisplayChart, setData, setLayout) {
@@ -160,7 +161,11 @@ export function UserStat() {
         //     setDisplayChart(false);
         //     setDisplayTable(true);
         // })
-        setArr(recent0["results"]); 
+
+        const arrayOfArrays = recent0["results"].map(({ exercise, time_done, correct }) => ({ "Exercise": exercise.replace(/_/g, " "), time_done, "Correct": correct })
+          );
+
+        setArr(arrayOfArrays); 
         setDisplayChart(false);
         setDisplayTable(true);
     }

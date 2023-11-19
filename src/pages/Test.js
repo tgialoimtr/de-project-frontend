@@ -7,6 +7,23 @@ function convertString(str) {
     return str.split("_").map(x => x[0].toUpperCase() + x.slice(1)).join(" ")
 }
 
+function udChart(arr, chartname, setData, setLayout) {
+    const valCol = 'correct rate'
+    // const baseCol = 'problem'
+    setData([{
+            y: arr.map(x => x['name'] || x['exercise'] || x['area'] || x['topic']),
+            x: arr.map(x => x['correct']/x['num_done']),
+            text: arr.map(x => Math.round(x['correct']/x['num_done']*100)/100),
+            type: "bar",
+            orientation: "h",
+            mode: 'lines+markers+text',
+            marker: {color: 'blue'},
+          }]);
+    setLayout({  xaxis: {title: valCol},
+    // yaxis: {title: vertical_name},
+    title: chartname, autosize: true} )
+}
+
 function Selector({names, selected, setSelected}) {
     const a = names.map((name, index) => 
         <div  class="form-check" >
