@@ -7,23 +7,31 @@ import { AdminStat } from "./pages/AdminStat"
 import { Routes, Route, Link } from 'react-router-dom';
 import { FindProblem } from './pages/FindProblem';
 import { ReactSession } from 'react-client-session';
+import {useNavigate} from "react-router-dom";
 
 ReactSession.setStoreType("localStorage");
 
 function App() {
+  const navigate = useNavigate();
+  const user_id = ReactSession.get("user_id");
+  const username = ReactSession.get("username");
+  console.log(username)
+  const logout=function() {
+    ReactSession.set("username", null);
+    navigate('/')
+  }
   return (
     <>
     <nav class="navbar navbar-expand-sm bg-light">
 
     <div class="container-fluid">
       <ul class="navbar-nav">
-      <li class="nav-item"><Link class="nav-link" to="/">Home</Link></li>
-        <li class="nav-item"><Link class="nav-link" to="/problems">Problems</Link></li>
-        <li class="nav-item"><Link class="nav-link" to="/userstat">User Stats</Link></li>
-        <li class="nav-item"><Link class="nav-link" to="/adminstat">Admin Stats</Link></li>
-        <li class="nav-item"><Link class="nav-link" to="/login">Login</Link></li>
+        {(username && username != 'admin')? <li class="nav-item"><Link class="nav-link" to="/problems">Problems</Link></li> :""}
+        {(username && username != 'admin')? <li class="nav-item"><Link class="nav-link" to="/userstat">User Stats</Link></li> :""}
+        {(username && username == 'admin')? <li class="nav-item"><Link class="nav-link" to="/adminstat">Admin Stats</Link></li> :""}
+        {(!username)? <li class="nav-item"><Link class="nav-link" to="/login">Login</Link></li>:""}
+        {(username)? <li class="nav-item"><a href="#!" class="nav-link" onClick={(e) => {logout()}}>Logout</a></li>:""}
         <li class="nav-item"><Link class="nav-link" to="/about">About</Link></li>
-        <li class="nav-item"><span class="nav-link" onClick={(e) => console.log("logout")}>Logout</span></li>
       </ul>
     </div>
 

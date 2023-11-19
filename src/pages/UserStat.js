@@ -3,16 +3,21 @@ import Plot from 'react-plotly.js';
 import { ReactSession }  from 'react-client-session';
 import "./Table.css";
 
+let areas0 = require('../sample/personal/get_areas_correct_rate_by_user_id.json');
+let topics0 = require('../sample/personal/get_topics_correct_rate_by_user_id.json');
+let questions0 = require('../sample/personal/get_problems_correct_rate_by_user_id.json');
+let recent0 = require('../sample/personal/get_recent_problems_by_user_id.json');
+
 function toUTC(epoch) {
     return new Date(epoch/1000).toISOString().slice(0,-5).replace("T"," ") 
 }
 
 function udChart(arr, chartname, setData, setLayout) {
-    const valCol = 'num_done'
-    const baseCol = 'last_try'
+    const valCol = 'correct rate'
+    const baseCol = 'last try'
     setData([{
-            x: arr.map(x => toUTC(x[baseCol])),
-            y: arr.map(x => x[valCol]),
+            x: arr.map(x => toUTC(x['last_try'])),
+            y: arr.map(x => x['correct']/x['num_done']),
             text: arr.map(x => x['name'] || x['exercise'] || x['area'] || x['topic']),
             type: 'scatter',
             mode: 'lines+markers+text',
@@ -80,15 +85,22 @@ export function UserStat() {
         const user_id = ReactSession.get("user_id");
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
-        fetch(`http://127.0.0.1:5000/get_topics_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        .then(res => res.json())
-        .then(rs => {
-            rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-            setArr(rs); 
-            udChart(rs, "Topics correct rate", setData, setLayout);
-            setDisplayChart(true);
-            setDisplayTable(true);
-        })
+
+        // fetch(`http://127.0.0.1:5000/get_topics_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
+        // .then(res => res.json())
+        // .then(rs => {
+        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        //     setArr(rs); 
+        //     udChart(rs, "Topics correct rate", setData, setLayout);
+        //     setDisplayChart(true);
+        //     setDisplayTable(true);
+        // })
+
+        const rs = topics0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        setArr(rs); 
+        udChart(rs, "Topics correct rate", setData, setLayout);
+        setDisplayChart(true);
+        setDisplayTable(true);
     }
     const getCRbyArea = function() {
         console.log(ReactSession.get("username"))
@@ -96,15 +108,20 @@ export function UserStat() {
         const user_id = ReactSession.get("user_id");
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
-        fetch(`http://127.0.0.1:5000/get_areas_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        .then(res => res.json())
-        .then(rs => {
-            rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-            setArr(rs); 
-            udChart(rs, "Areas correct rate", setData, setLayout);
-            setDisplayChart(true);
-            setDisplayTable(true);
-        })
+        // fetch(`http://127.0.0.1:5000/get_areas_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
+        // .then(res => res.json())
+        // .then(rs => {
+        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        //     setArr(rs); 
+        //     udChart(rs, "Areas correct rate", setData, setLayout);
+        //     setDisplayChart(true);
+        //     setDisplayTable(true);
+        // })
+        const rs = areas0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        setArr(rs); 
+        udChart(rs, "Areas correct rate", setData, setLayout);
+        setDisplayChart(true);
+        setDisplayTable(true);
     }
 
     const getCRbyProblem = function() {
@@ -113,15 +130,20 @@ export function UserStat() {
         const user_id = ReactSession.get("user_id");
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
-        fetch(`http://127.0.0.1:5000/get_problems_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        .then(res => res.json())
-        .then(rs => {
-            rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-            setArr(rs); 
-            udChart(rs, "Problems correct rate", setData, setLayout);
-            setDisplayChart(true);
-            setDisplayTable(true);
-        })
+        // fetch(`http://127.0.0.1:5000/get_problems_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
+        // .then(res => res.json())
+        // .then(rs => {
+        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        //     setArr(rs); 
+        //     udChart(rs, "Problems correct rate", setData, setLayout);
+        //     setDisplayChart(true);
+        //     setDisplayTable(true);
+        // })
+        const rs = questions0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        setArr(rs); 
+        udChart(rs, "Problems correct rate", setData, setLayout);
+        setDisplayChart(true);
+        setDisplayTable(true);
     }
 
     const getRecentProblems = function() {
@@ -130,13 +152,16 @@ export function UserStat() {
         const user_id = ReactSession.get("user_id");
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
-        fetch(`http://127.0.0.1:5000/get_recent_problems_by_user_id?user_id=${user_id}${d1}${d2}`)
-        .then(res => res.json())
-        .then(rs => {
-            setArr(rs["results"]); 
-            setDisplayChart(false);
-            setDisplayTable(true);
-        })
+        // fetch(`http://127.0.0.1:5000/get_recent_problems_by_user_id?user_id=${user_id}${d1}${d2}`)
+        // .then(res => res.json())
+        // .then(rs => {
+        //     setArr(rs["results"]); 
+        //     setDisplayChart(false);
+        //     setDisplayTable(true);
+        // })
+        setArr(recent0["results"]); 
+        setDisplayChart(false);
+        setDisplayTable(true);
     }
 
     return (
