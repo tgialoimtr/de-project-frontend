@@ -3,18 +3,15 @@ import Plot from 'react-plotly.js';
 import { ReactSession }  from 'react-client-session';
 import "./Table.css";
 
-// let gender0 = require('../sample/admin/statistic_gender.json');
-// let cities0 = require('../sample/admin/statistic_cities.json');
-// let areas0 = require('../sample/admin/statistic_areas.json');
-// let topics0 = require('../sample/admin/statistic_topics.json');
-// let questions0 = require('../sample/admin/statistic_attempts_by_exercise.json');
-// let correct_rate0 = require('../sample/admin/statistic_correct_rate_by_exercise.json');
+let gender0 = require('../sample/admin/statistic_gender.json');
+let cities0 = require('../sample/admin/statistic_cities.json');
+let areas0 = require('../sample/admin/statistic_areas.json');
+let topics0 = require('../sample/admin/statistic_topics.json');
+let questions0 = require('../sample/admin/statistic_problems.json');
+let attempts0 = require('../sample/admin/statistic_attempts_by_exercise.json');
+let correct_rate0 = require('../sample/admin/statistic_correct_rate_by_exercise.json');
 // let time_taken0 = require('../sample/admin/statistic_time_taken_by_exercise.json');
 
-let areas0 = require('../sample/personal/get_areas_correct_rate_by_user_id.json');
-let topics0 = require('../sample/personal/get_topics_correct_rate_by_user_id.json');
-let questions0 = require('../sample/personal/get_problems_correct_rate_by_user_id.json');
-let recent0 = require('../sample/personal/get_recent_problems_by_user_id.json');
 
 function toUTC(epoch) {
     return new Date(epoch/1000).toISOString().slice(0,-5).replace("T"," ") 
@@ -35,26 +32,42 @@ function udChart(arr, chartname, setData, setLayout) {
     yaxis: {title: valCol},title: chartname, autosize: true} )
 }
 
-function popoutChild(arr, valCol, setDisplayChart, setData, setLayout) {
-    const othersCol = Object.keys(arr[0]).filter(function(e) { return e !== valCol })
-    var baseCol = othersCol[0]
-    if (othersCol.length == 1) 
-        baseCol = othersCol[0]
-    else
-        baseCol = prompt("Select base column from " + othersCol.join(", "));
-    const xArray = arr.map(x => x[baseCol])
-    const yArray = arr.map(x => x[valCol])
-    console.log(yArray)
+function udChart1(arr, chartname, setData, setLayout, baseCol, valCol) {
     setData([{
-            x: xArray,
-            y: yArray,
-            type: 'bar',
+            y: arr.map(x => x[baseCol]),
+            x: arr.map(x => x[valCol]),
+            type: "bar",
+            orientation: "h",
             mode: 'lines+markers',
-            marker: {color: 'red'},
+            marker: {color: 'blue'},
           }]);
-    setLayout({ width: 1000, height: 800,   xaxis: {title: baseCol},
-    yaxis: {title: valCol},title: 'A Fancy Plot'} )
-    setDisplayChart(true)
+    setLayout({  xaxis: {title: valCol.replace('_', ' ')},
+    yaxis: {title: baseCol.replace('_', ' ')},title: chartname, autosize: true} )
+}
+
+function udChart2(arr, chartname, setData, setLayout, baseCol, valCol) {
+    setData([{
+            x: arr.map(x =>x[baseCol]),
+            y: arr.map(x => x[valCol]),
+            type: 'bar',
+            mode: 'markers+text',
+            marker: {color: 'green'},
+          }]);
+    setLayout({  xaxis: {title: baseCol.replace('_', ' ')},
+    yaxis: {title: valCol.replace('_', ' ')},title: chartname, autosize: true} )
+}
+
+function udChart3(arr, chartname, setData, setLayout, baseCol, valCol) {
+    setData([{
+            y: arr.map(x => x[baseCol]),
+            x: arr.map(x => x[valCol]),
+            type: "bar",
+            orientation: "h",
+            mode: 'lines+markers',
+            marker: {color: 'yellow'},
+          }]);
+    setLayout({  xaxis: {title: valCol.replace('_', ' ')},
+    yaxis: {title: baseCol.replace('_', ' ')},title: chartname, autosize: true} )
 }
 
 function Table({arr, setData, setLayout}) {
@@ -88,7 +101,31 @@ export function AdminStat() {
     const date_to = useRef(null);
     const problem_name = useRef(null);
 
-    const getCRbyTopic = function() {
+    const numdoneByArea = function() {
+        console.log(ReactSession.get("username"))
+        console.log(ReactSession.get("user_id"))
+        const user_id = ReactSession.get("user_id");
+        const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
+        const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
+
+        // fetch(`http://127.0.0.1:5000/get_topics_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
+        // .then(res => res.json())
+        // .then(rs => {
+        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        //     setArr(rs); 
+        //     udChart(rs, "Topics correct rate", setData, setLayout);
+        //     setDisplayChart(true);
+        //     setDisplayTable(true);
+        // })
+
+        const rs = areas0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        setArr(rs); 
+        udChart1(rs, "Num done by areas", setData, setLayout, 'area', 'num_done');
+        setDisplayChart(true);
+        setDisplayTable(true);
+    }
+
+    const numdoneByTopic = function() {
         console.log(ReactSession.get("username"))
         console.log(ReactSession.get("user_id"))
         const user_id = ReactSession.get("user_id");
@@ -107,11 +144,36 @@ export function AdminStat() {
 
         const rs = topics0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
         setArr(rs); 
-        udChart(rs, "Topics correct rate", setData, setLayout);
+        udChart1(rs, "Num done by topics", setData, setLayout, 'topic', 'num_done');
         setDisplayChart(true);
         setDisplayTable(true);
     }
-    const getCRbyArea = function() {
+
+    const numdoneByProblem = function() {
+        console.log(ReactSession.get("username"))
+        console.log(ReactSession.get("user_id"))
+        const user_id = ReactSession.get("user_id");
+        const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
+        const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
+
+        // fetch(`http://127.0.0.1:5000/get_topics_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
+        // .then(res => res.json())
+        // .then(rs => {
+        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        //     setArr(rs); 
+        //     udChart(rs, "Topics correct rate", setData, setLayout);
+        //     setDisplayChart(true);
+        //     setDisplayTable(true);
+        // })
+
+        const rs = questions0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        setArr(rs); 
+        udChart1(rs, "User by exercises", setData, setLayout, 'exercise', 'num_user');
+        setDisplayChart(true);
+        setDisplayTable(true);
+    }
+
+    const attemptsByExcercise = function() {
         console.log(ReactSession.get("username"))
         console.log(ReactSession.get("user_id"))
         const user_id = ReactSession.get("user_id");
@@ -126,14 +188,34 @@ export function AdminStat() {
         //     setDisplayChart(true);
         //     setDisplayTable(true);
         // })
-        const rs = areas0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        const rs = attempts0["results"].sort(function(a, b){return a["num_trial"] - b["num_trial"]}); 
         setArr(rs); 
-        udChart(rs, "Areas correct rate", setData, setLayout);
+        udChart2(rs, "attempts by excercise", setData, setLayout, 'num_trial', 'num_user');
         setDisplayChart(true);
         setDisplayTable(true);
     }
-
-    const getCRbyProblem = function() {
+    const crByExcercise = function() {
+        console.log(ReactSession.get("username"))
+        console.log(ReactSession.get("user_id"))
+        const user_id = ReactSession.get("user_id");
+        const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
+        const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
+        // fetch(`http://127.0.0.1:5000/get_areas_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
+        // .then(res => res.json())
+        // .then(rs => {
+        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        //     setArr(rs); 
+        //     udChart(rs, "Areas correct rate", setData, setLayout);
+        //     setDisplayChart(true);
+        //     setDisplayTable(true);
+        // })
+        const rs = correct_rate0["results"].sort(function(a, b){return a["correct_rate"] - b["correct_rate"]}); 
+        setArr(rs); 
+        udChart2(rs, "correct rate by excercise", setData, setLayout, 'correct_rate', 'num_user');
+        setDisplayChart(true);
+        setDisplayTable(true);
+    }
+    const usersByCities = function() {
         console.log(ReactSession.get("username"))
         console.log(ReactSession.get("user_id"))
         const user_id = ReactSession.get("user_id");
@@ -148,28 +230,28 @@ export function AdminStat() {
         //     setDisplayChart(true);
         //     setDisplayTable(true);
         // })
-        const rs = questions0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        const rs = cities0["results"]
         setArr(rs); 
-        udChart(rs, "Problems correct rate", setData, setLayout);
+        udChart3(rs, "users by cities", setData, setLayout, 'user_city', 'num_user');
         setDisplayChart(true);
         setDisplayTable(true);
     }
-
-    const getRecentProblems = function() {
-        console.log(ReactSession.get("username"))
-        console.log(ReactSession.get("user_id"))
-        const user_id = ReactSession.get("user_id");
+    const usersByGenders = function() {
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
-        // fetch(`http://127.0.0.1:5000/get_recent_problems_by_user_id?user_id=${user_id}${d1}${d2}`)
+        // fetch(`http://127.0.0.1:5000/get_problems_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
         // .then(res => res.json())
         // .then(rs => {
-        //     setArr(rs["results"]); 
-        //     setDisplayChart(false);
+        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        //     setArr(rs); 
+        //     udChart(rs, "Problems correct rate", setData, setLayout);
+        //     setDisplayChart(true);
         //     setDisplayTable(true);
         // })
-        setArr(recent0["results"]); 
-        setDisplayChart(false);
+        const rs = gender0["results"]
+        setArr(rs); 
+        udChart3(rs, "users by genders", setData, setLayout, 'gender', 'count');
+        setDisplayChart(true);
         setDisplayTable(true);
     }
 
@@ -196,10 +278,17 @@ export function AdminStat() {
         </div>
         </div>
         <div id="query" class="form-group pt-2">
-        <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); getCRbyTopic()}}>Topics correct rate</button>
-        <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); getCRbyArea()}}>Areas correct rate</button>  
-        <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); getCRbyProblem()}}>Problems correct rate</button> 
-        <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); getRecentProblems()}}>My recent problems</button> 
+        <button type="submit" class="btn btn-warning mx-2" onClick={(e)=>{e.preventDefault(); usersByGenders()}}>Users by Genders</button> 
+        <button type="submit" class="btn btn-warning mx-2" onClick={(e)=>{e.preventDefault(); usersByCities()}}>Users by Cities</button> 
+
+        <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); numdoneByArea()}}>Num done by area</button>
+        <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); numdoneByTopic()}}>Num done by topic</button>
+        <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); numdoneByProblem()}}>User by exercise</button>
+
+        <button type="submit" class="btn btn-success mx-2" onClick={(e)=>{e.preventDefault(); attemptsByExcercise()}}>Attempts by exercise</button>  
+        <button type="submit" class="btn btn-success mx-2" onClick={(e)=>{e.preventDefault(); crByExcercise()}}>Correct rates by exercise</button>  
+        
+        {/* <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); getRecentProblems()}}>My recent problems</button>  */}
         </div>
         </form>
         <div id="chart" class="pt-4">

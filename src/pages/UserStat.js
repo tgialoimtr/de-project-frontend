@@ -16,15 +16,16 @@ function udChart(arr, chartname, setData, setLayout) {
     const valCol = 'correct rate'
     const baseCol = 'last try'
     setData([{
-            x: arr.map(x => toUTC(x['last_try'])),
-            y: arr.map(x => x['correct']/x['num_done']),
+            y: arr.map(x => toUTC(x['last_try'])),
+            x: arr.map(x => x['correct']/x['num_done']),
             text: arr.map(x => x['name'] || x['exercise'] || x['area'] || x['topic']),
-            type: 'scatter',
+            type: "scatter",
+            orientation: "h",
             mode: 'lines+markers+text',
             marker: {color: 'red'},
           }]);
-    setLayout({  xaxis: {title: baseCol},
-    yaxis: {title: valCol},title: chartname, autosize: true} )
+    setLayout({  xaxis: {title: valCol},
+    yaxis: {title: baseCol},title: chartname, autosize: true} )
 }
 
 function popoutChild(arr, valCol, setDisplayChart, setData, setLayout) {

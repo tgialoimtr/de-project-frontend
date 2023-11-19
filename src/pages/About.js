@@ -5,26 +5,24 @@ export function About() {
     return (
         <>
     <div class="jumbotron text-center">
-    <h1>My First Bootstrap Page</h1>
-    <p>Resize this responsive page to see the effect!</p> 
+    <h1>Junyi Academy</h1>
+    <p>Online Testing for students and statistics immediately !</p> 
   </div>
     
   <div class="container">
     <div class="row">
       <div class="col-sm-4">
-        <h3>Column 1</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+        <h3>What we do</h3>
+        <p>Cung cấp dịch vụ Online Testing đến mọi người nhanh chóng</p>
       </div>
       <div class="col-sm-4">
-        <h3>Column 2</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+        <h3>Vision</h3>
+        <p>Cung cấp dịch vụ Online Testing đến mọi người nhanh chóng</p>
+        <p></p>
       </div>
       <div class="col-sm-4">
-        <h3>Column 3</h3>        
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+        <h3>Who we are</h3>        
+        <p>Những sinh viên tài năng của lớp cao học Bách Khoa TPHCM</p>
       </div>
     </div>
   </div>
