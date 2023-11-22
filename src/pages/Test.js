@@ -47,6 +47,11 @@ function Question({question, names, selected, setSelected, userAnswers, setUserA
         if (index < names.length - 1) 
             setSelected(names[index + 1])
     }
+    const docs = JSON.parse(question.documents.replace(/'/g, "\"")).slice(1,-1)
+    const hints = docs.map((link, index) => <>
+            <a href={link}> Hint {index} </a>
+        </>)
+    console.log(hints.length)
     return (
     <div class="question">
     <h4>{convertString(question.name)}</h4>
@@ -54,6 +59,7 @@ function Question({question, names, selected, setSelected, userAnswers, setUserA
     <form onSubmit={(e) => questionDone(e)}>
     {a}
     <input type="submit" value="Submit&Next" disabled={disableNext}/>
+    {hints}
     </form>
     <hr/>
     </div>
