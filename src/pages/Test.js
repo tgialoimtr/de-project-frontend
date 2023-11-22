@@ -1,6 +1,7 @@
 import "./Test.css"
 import 'bootstrap/dist/css/bootstrap.css';
 import React, {useState, useEffect, useRef} from 'react';
+import { ReactSession }  from 'react-client-session';
 
 function convertString(str) {
     // split the string by the hyphen character
@@ -42,6 +43,7 @@ function Selector({names, selected, setSelected}) {
 }
 
 function Question({question, names, selected, setSelected, userAnswers, setUserAnswers}) {
+    console.log(question.options)
     const options = JSON.parse(question.options.replace(/'/g, "\""))
     const a = options.map((option, index) => 
         <div  class="form-check" >
@@ -54,16 +56,25 @@ function Question({question, names, selected, setSelected, userAnswers, setUserA
         </div>
     )
     const index = names.indexOf(selected)
-    console.log(index)
     const disableNext = (index == names.length - 1) 
     const questionDone = function(e) {
         e.preventDefault()
+        const user_id = ReactSession.get("user_id");
+        const ddd = JSON.stringify({'user_id':user_id, 'exercise':question.name, 'time_taken':0, 'correct':(userAnswers[question.name] == question.answer)})
+        console.log(ddd)
 
-        console.log(userAnswers[question.name] + " --- " + question.answer)
-        // fetch() write log 
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: ddd
+          };
+          // TODO fix hardcode
+          fetch(`http://localhost:5000/write_log`, requestOptions).then(res => console.log(res.json()) )
+
         if (index < names.length - 1) 
             setSelected(names[index + 1])
     }
+    
     const docs = JSON.parse(question.documents.replace(/'/g, "\"")).slice(1,-1)
     const hints = docs.map((link, index) => <>
             <a href={link}> Hint {index} </a>

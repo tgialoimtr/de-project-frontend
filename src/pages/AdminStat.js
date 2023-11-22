@@ -3,13 +3,13 @@ import Plot from 'react-plotly.js';
 import { ReactSession }  from 'react-client-session';
 import "./Table.css";
 
-let gender0 = require('../sample/admin/statistic_gender.json');
-let cities0 = require('../sample/admin/statistic_cities.json');
-let areas0 = require('../sample/admin/statistic_areas.json');
-let topics0 = require('../sample/admin/statistic_topics.json');
-let questions0 = require('../sample/admin/statistic_problems.json');
-let attempts0 = require('../sample/admin/statistic_attempts_by_exercise.json');
-let correct_rate0 = require('../sample/admin/statistic_correct_rate_by_exercise.json');
+// let gender0 = require('../sample/admin/statistic_gender.json');
+// let cities0 = require('../sample/admin/statistic_cities.json');
+// let areas0 = require('../sample/admin/statistic_areas.json');
+// let topics0 = require('../sample/admin/statistic_topics.json');
+// let questions0 = require('../sample/admin/statistic_problems.json');
+// let attempts0 = require('../sample/admin/statistic_attempts_by_exercise.json');
+// let correct_rate0 = require('../sample/admin/statistic_correct_rate_by_exercise.json');
 // let time_taken0 = require('../sample/admin/statistic_time_taken_by_exercise.json');
 
 
@@ -102,157 +102,161 @@ export function AdminStat() {
     const problem_name = useRef(null);
 
     const numdoneByArea = function() {
-        console.log(ReactSession.get("username"))
-        console.log(ReactSession.get("user_id"))
-        const user_id = ReactSession.get("user_id");
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
 
-        // fetch(`http://127.0.0.1:5000/get_topics_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        // .then(res => res.json())
-        // .then(rs => {
-        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        //     setArr(rs); 
-        //     udChart(rs, "Topics correct rate", setData, setLayout);
-        //     setDisplayChart(true);
-        //     setDisplayTable(true);
-        // })
+        fetch(`http://127.0.0.1:5000/statistic_areas?${d1}${d2}`)
+        .then(res => res.json())
+        .then(rs => {
+            rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+            setArr(rs); 
+            udChart1(rs, "Num done by areas", setData, setLayout, 'area', 'num_done');
+            setDisplayChart(true);
+            setDisplayTable(true);
+        })
 
-        const rs = areas0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        setArr(rs); 
-        udChart1(rs, "Num done by areas", setData, setLayout, 'area', 'num_done');
-        setDisplayChart(true);
-        setDisplayTable(true);
+        // const rs = areas0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        // setArr(rs); 
+        // udChart1(rs, "Num done by areas", setData, setLayout, 'area', 'num_done');
+        // setDisplayChart(true);
+        // setDisplayTable(true);
     }
 
     const numdoneByTopic = function() {
-        console.log(ReactSession.get("username"))
-        console.log(ReactSession.get("user_id"))
-        const user_id = ReactSession.get("user_id");
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
 
-        // fetch(`http://127.0.0.1:5000/get_topics_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        // .then(res => res.json())
-        // .then(rs => {
-        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        //     setArr(rs); 
-        //     udChart(rs, "Topics correct rate", setData, setLayout);
-        //     setDisplayChart(true);
-        //     setDisplayTable(true);
-        // })
+        fetch(`http://127.0.0.1:5000/statistic_topics?${d1}${d2}`)
+        .then(res => res.json())
+        .then(rs => {
+            rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+            setArr(rs); 
+            udChart1(rs, "Num done by topics", setData, setLayout, 'topic', 'num_done');
+            setDisplayChart(true);
+            setDisplayTable(true);
+        })
 
-        const rs = topics0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        setArr(rs); 
-        udChart1(rs, "Num done by topics", setData, setLayout, 'topic', 'num_done');
-        setDisplayChart(true);
-        setDisplayTable(true);
+        // const rs = topics0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        // setArr(rs); 
+        // udChart1(rs, "Num done by topics", setData, setLayout, 'topic', 'num_done');
+        // setDisplayChart(true);
+        // setDisplayTable(true);
     }
 
     const numdoneByProblem = function() {
-        console.log(ReactSession.get("username"))
-        console.log(ReactSession.get("user_id"))
-        const user_id = ReactSession.get("user_id");
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
 
-        // fetch(`http://127.0.0.1:5000/get_topics_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        // .then(res => res.json())
-        // .then(rs => {
-        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        //     setArr(rs); 
-        //     udChart(rs, "Topics correct rate", setData, setLayout);
-        //     setDisplayChart(true);
-        //     setDisplayTable(true);
-        // })
+        fetch(`http://127.0.0.1:5000/statistic_problems?${d1}${d2}`)
+        .then(res => res.json())
+        .then(rs => {
+            rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+            setArr(rs); 
+            udChart1(rs, "User by exercises", setData, setLayout, 'exercise', 'num_user');
+            setDisplayChart(true);
+            setDisplayTable(true);
+        })
 
-        const rs = questions0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        setArr(rs); 
-        udChart1(rs, "User by exercises", setData, setLayout, 'exercise', 'num_user');
-        setDisplayChart(true);
-        setDisplayTable(true);
+        // const rs = questions0["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
+        // setArr(rs); 
+        // udChart1(rs, "User by exercises", setData, setLayout, 'exercise', 'num_user');
+        // setDisplayChart(true);
+        // setDisplayTable(true);
     }
 
     const attemptsByExcercise = function() {
-        console.log(ReactSession.get("username"))
-        console.log(ReactSession.get("user_id"))
-        const user_id = ReactSession.get("user_id");
+        const exercise = (problem_name.current)?`&exercise=${problem_name.current.value}`:""
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
-        // fetch(`http://127.0.0.1:5000/get_areas_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        // .then(res => res.json())
-        // .then(rs => {
-        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        //     setArr(rs); 
-        //     udChart(rs, "Areas correct rate", setData, setLayout);
-        //     setDisplayChart(true);
-        //     setDisplayTable(true);
-        // })
-        const rs = attempts0["results"].sort(function(a, b){return a["num_trial"] - b["num_trial"]}); 
-        setArr(rs); 
-        udChart2(rs, "attempts by excercise", setData, setLayout, 'num_trial', 'num_user');
-        setDisplayChart(true);
-        setDisplayTable(true);
+        console.log(`http://127.0.0.1:5000/statistic_attempts_by_exercise?${exercise}${d1}${d2}`)
+        fetch(`http://127.0.0.1:5000/statistic_attempts_by_exercise?${exercise}${d1}${d2}`)
+        .then(res => res.json())
+        .then(rs => {
+            rs = rs["results"].sort(function(a, b){return a["num_trial"] - b["num_trial"]}); 
+            setArr(rs); 
+            udChart2(rs, "attempts by excercise", setData, setLayout, 'num_trial', 'num_user');
+            setDisplayChart(true);
+            setDisplayTable(true);
+        })
+        // const rs = attempts0["results"].sort(function(a, b){return a["num_trial"] - b["num_trial"]}); 
+        // setArr(rs); 
+        // udChart2(rs, "attempts by excercise", setData, setLayout, 'num_trial', 'num_user');
+        // setDisplayChart(true);
+        // setDisplayTable(true);
     }
     const crByExcercise = function() {
-        console.log(ReactSession.get("username"))
-        console.log(ReactSession.get("user_id"))
-        const user_id = ReactSession.get("user_id");
+        const exercise = (problem_name.current)?`&exercise=${problem_name.current.value}`:""
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
-        // fetch(`http://127.0.0.1:5000/get_areas_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        // .then(res => res.json())
-        // .then(rs => {
-        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        //     setArr(rs); 
-        //     udChart(rs, "Areas correct rate", setData, setLayout);
-        //     setDisplayChart(true);
-        //     setDisplayTable(true);
-        // })
-        const rs = correct_rate0["results"].sort(function(a, b){return a["correct_rate"] - b["correct_rate"]}); 
-        setArr(rs); 
-        udChart2(rs, "correct rate by excercise", setData, setLayout, 'correct_rate', 'num_user');
-        setDisplayChart(true);
-        setDisplayTable(true);
+        console.log(`http://127.0.0.1:5000/statistic_correct_rate_by_exercise?${exercise}${d1}${d2}`)
+        fetch(`http://127.0.0.1:5000/statistic_correct_rate_by_exercise?${exercise}${d1}${d2}`)
+        .then(res => res.json())
+        .then(rs => {
+            rs = rs["results"].sort(function(a, b){return a["correct_rate"] - b["correct_rate"]}); 
+            setArr(rs); 
+            udChart2(rs, "correct rate by excercise", setData, setLayout, 'correct_rate', 'num_user');
+            setDisplayChart(true);
+            setDisplayTable(true);
+        })
+        // const rs = correct_rate0["results"].sort(function(a, b){return a["correct_rate"] - b["correct_rate"]}); 
+        // setArr(rs); 
+        // udChart2(rs, "correct rate by excercise", setData, setLayout, 'correct_rate', 'num_user');
+        // setDisplayChart(true);
+        // setDisplayTable(true);
     }
-    const usersByCities = function() {
-        console.log(ReactSession.get("username"))
-        console.log(ReactSession.get("user_id"))
-        const user_id = ReactSession.get("user_id");
+
+    const ttByExcercise = function() {
+        const exercise = (problem_name.current)?`&exercise=${problem_name.current.value}`:""
         const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
         const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
-        // fetch(`http://127.0.0.1:5000/get_problems_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        // .then(res => res.json())
-        // .then(rs => {
-        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        //     setArr(rs); 
-        //     udChart(rs, "Problems correct rate", setData, setLayout);
-        //     setDisplayChart(true);
-        //     setDisplayTable(true);
-        // })
-        const rs = cities0["results"]
-        setArr(rs); 
-        udChart3(rs, "users by cities", setData, setLayout, 'user_city', 'num_user');
-        setDisplayChart(true);
-        setDisplayTable(true);
+        console.log(`http://127.0.0.1:5000/statistic_time_taken_by_exercise?${exercise}${d1}${d2}`)
+        fetch(`http://127.0.0.1:5000/statistic_time_taken_by_exercise?${exercise}${d1}${d2}`)
+        .then(res => res.json())
+        .then(rs => {
+            rs = rs["results"].sort(function(a, b){return a["time_taken"] - b["time_taken"]}); 
+            setArr(rs); 
+            udChart2(rs, "time taken by excercise", setData, setLayout, 'time_taken', 'num_user');
+            setDisplayChart(true);
+            setDisplayTable(true);
+        })
+        // const rs = time_taken0["results"].sort(function(a, b){return a["time_taken"] - b["time_taken"]}); 
+        // setArr(rs); 
+        // udChart2(rs, "time taken by excercise", setData, setLayout, 'time_taken', 'num_user');
+        // setDisplayChart(true);
+        // setDisplayTable(true);
+    }
+
+    const usersByCities = function() {
+        fetch(`http://127.0.0.1:5000/statistic_cities`)
+        .then(res => res.json())
+        .then(rs => {
+            rs = rs["results"]
+            setArr(rs); 
+            udChart3(rs, "users by cities", setData, setLayout, 'user_city', 'num_user');
+            setDisplayChart(true);
+            setDisplayTable(true);
+        })
+        // const rs = cities0["results"]
+        // setArr(rs); 
+        // udChart3(rs, "users by cities", setData, setLayout, 'user_city', 'num_user');
+        // setDisplayChart(true);
+        // setDisplayTable(true);
     }
     const usersByGenders = function() {
-        const d1 = (date_from.current)?`&start=${date_from.current.value}`:""
-        const d2 = (date_to.current)?`&end=${date_to.current.value}`:""
-        // fetch(`http://127.0.0.1:5000/get_problems_correct_rate_by_user_id?user_id=${user_id}${d1}${d2}`)
-        // .then(res => res.json())
-        // .then(rs => {
-        //     rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
-        //     setArr(rs); 
-        //     udChart(rs, "Problems correct rate", setData, setLayout);
-        //     setDisplayChart(true);
-        //     setDisplayTable(true);
-        // })
-        const rs = gender0["results"]
-        setArr(rs); 
-        udChart3(rs, "users by genders", setData, setLayout, 'gender', 'count');
-        setDisplayChart(true);
-        setDisplayTable(true);
+        fetch(`http://127.0.0.1:5000/statistic_gender`)
+        .then(res => res.json())
+        .then(rs => {
+            rs = rs["results"]
+            setArr(rs); 
+            udChart3(rs, "users by genders", setData, setLayout, 'gender', 'count');
+            setDisplayChart(true);
+            setDisplayTable(true);
+        })
+        // const rs = gender0["results"]
+        // setArr(rs); 
+        // udChart3(rs, "users by genders", setData, setLayout, 'gender', 'count');
+        // setDisplayChart(true);
+        // setDisplayTable(true);
     }
 
     return (
@@ -287,6 +291,7 @@ export function AdminStat() {
 
         <button type="submit" class="btn btn-success mx-2" onClick={(e)=>{e.preventDefault(); attemptsByExcercise()}}>Attempts by exercise</button>  
         <button type="submit" class="btn btn-success mx-2" onClick={(e)=>{e.preventDefault(); crByExcercise()}}>Correct rates by exercise</button>  
+        <button type="submit" class="btn btn-success mx-2" onClick={(e)=>{e.preventDefault(); ttByExcercise()}}>Time taken by exercise</button>  
         
         {/* <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); getRecentProblems()}}>My recent problems</button>  */}
         </div>

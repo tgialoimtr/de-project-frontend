@@ -24,20 +24,20 @@ export function Login(){
                 body: JSON.stringify({'username':username, 'password':password})
               };
               // TODO fix hardcode
-              // fetch(`http://localhost:5000/login`, requestOptions).then(res => res.json())
-              //   .then(rs => {
-              //       if ('error' in rs) alert(rs['error']); else 
-              //       {
-              //           console.log(rs);
-              //           ReactSession.set("username", username);
-              //           ReactSession.set("user_id", rs['results'][0]['user_id']);
-              //           if (username == 'admin') navigate('/adminstat'); else navigate('/userstat');
-              //       }
-              //   })
+              fetch(`http://localhost:5000/login`, requestOptions).then(res => res.json())
+                .then(rs => {
+                    if ('error' in rs) alert(rs['error']); else 
+                    {
+                        console.log(rs);
+                        ReactSession.set("username", username);
+                        ReactSession.set("user_id", rs['results'][0]['user_id']);
+                        if (username == 'admin') navigate('/adminstat'); else navigate('/userstat');
+                    }
+                })
 
-              ReactSession.set("username", username);
-              ReactSession.set("user_id", 45);
-              if (username == 'admin') navigate('/adminstat'); else navigate('/userstat');
+              // ReactSession.set("username", username);
+              // ReactSession.set("user_id", 45);
+              // if (username == 'admin') navigate('/adminstat'); else navigate('/userstat');
         }
     }
  
