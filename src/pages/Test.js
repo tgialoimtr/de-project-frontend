@@ -2,6 +2,7 @@ import "./Test.css"
 import 'bootstrap/dist/css/bootstrap.css';
 import React, {useState, useEffect, useRef} from 'react';
 import { ReactSession }  from 'react-client-session';
+import ReturnDialog from './ReturnDialog';
 
 function convertString(str) {
     // split the string by the hyphen character
@@ -44,6 +45,24 @@ function Selector({names, selected, setSelected}) {
 
 function Question({question, names, selected, setSelected, userAnswers, setUserAnswers}) {
     console.log(question.options)
+    const [showDialog, setShowDialog] = useState(false);
+    const [returnDialogMessage, setReturnDialogMessage] = useState('');
+
+    const openDialog = (message) => {
+        setReturnDialogMessage(message);
+        setShowDialog(true);
+    };
+
+    const closeDialog = () => {
+        setShowDialog(false);
+    };
+
+    const nextQuestion = () => {
+        console.log("im here")
+        if (names.indexOf(selected) < names.length - 1) 
+            setSelected(names[index + 1])
+        setShowDialog(false);
+    };
     const options = JSON.parse(question.options.replace(/'/g, "\""))
     const a = options.map((option, index) => 
         <div  class="form-check" >
@@ -60,8 +79,11 @@ function Question({question, names, selected, setSelected, userAnswers, setUserA
     const questionDone = function(e) {
         e.preventDefault()
         const user_id = ReactSession.get("user_id");
+        const is_correct = (userAnswers[question.name] == question.answer);
         const ddd = JSON.stringify({'user_id':user_id, 'exercise':question.name, 'time_taken':0, 'correct':(userAnswers[question.name] == question.answer)})
-        console.log(ddd)
+        console.log(is_correct)
+        { is_correct ? openDialog("Your answer is correct!") : openDialog("Your answer is incorrect!")}
+
 
         const requestOptions = {
             method: 'POST',
@@ -71,8 +93,8 @@ function Question({question, names, selected, setSelected, userAnswers, setUserA
           // TODO fix hardcode
           fetch(`http://localhost:5000/write_log`, requestOptions).then(res => console.log(res.json()) )
 
-        if (index < names.length - 1) 
-            setSelected(names[index + 1])
+        // if (index < names.length - 1) 
+        //     setSelected(names[index + 1])
     }
     
     const docs = JSON.parse(question.documents.replace(/'/g, "\"")).slice(1,-1)
@@ -86,10 +108,17 @@ function Question({question, names, selected, setSelected, userAnswers, setUserA
     <p>{question.question}</p>
     <form onSubmit={(e) => questionDone(e)}>
     {a}
-    <input type="submit" value="Submit&Next" disabled={disableNext}/>
+    {/* <input type="submit" value="Submit&Next" disabled={disableNext}/> */}
+    <input type="submit" value="Submit"/>
     {hints}
     </form>
     <hr/>
+    <ReturnDialog
+        showDialog={showDialog}
+        returnDialogMessage={returnDialogMessage}
+        onClose={closeDialog}
+        onNext={nextQuestion}
+    />
     </div>
     )
 }

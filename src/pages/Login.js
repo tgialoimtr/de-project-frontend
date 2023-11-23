@@ -17,13 +17,24 @@ export function Login(){
         else if(password.length === 0){
           alert("password has left Blank!");
         }
+        else if(username == 'admin'){
+          if (password=="123456"){
+            navigate('/adminstat');
+          }
+          else{
+            alert("Wrong password!");
+          }
+          
+        }
         else{
             const requestOptions = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' , 
+            },
                 body: JSON.stringify({'username':username, 'password':password})
               };
               // TODO fix hardcode
+
               fetch(`http://localhost:5000/login`, requestOptions).then(res => res.json())
                 .then(rs => {
                     if ('error' in rs) alert(rs['error']); else 
@@ -36,7 +47,7 @@ export function Login(){
                 })
 
               // ReactSession.set("username", username);
-              // ReactSession.set("user_id", 45);
+              // ReactSession.set("user_id", 1);
               // if (username == 'admin') navigate('/adminstat'); else navigate('/userstat');
         }
     }

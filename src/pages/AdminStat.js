@@ -152,7 +152,7 @@ export function AdminStat() {
         .then(rs => {
             rs = rs["results"].sort(function(a, b){return a["last_try"] - b["last_try"]}); 
             setArr(rs); 
-            udChart1(rs, "User by exercises", setData, setLayout, 'exercise', 'num_user');
+            udChart1(rs, "Num done by exercises", setData, setLayout, 'exercise', 'num_user');
             setDisplayChart(true);
             setDisplayTable(true);
         })
@@ -287,7 +287,7 @@ export function AdminStat() {
 
         <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); numdoneByArea()}}>Num done by area</button>
         <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); numdoneByTopic()}}>Num done by topic</button>
-        <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); numdoneByProblem()}}>User by exercise</button>
+        <button type="submit" class="btn btn-primary mx-2" onClick={(e)=>{e.preventDefault(); numdoneByProblem()}}>Num done by exercise</button>
 
         <button type="submit" class="btn btn-success mx-2" onClick={(e)=>{e.preventDefault(); attemptsByExcercise()}}>Attempts by exercise</button>  
         <button type="submit" class="btn btn-success mx-2" onClick={(e)=>{e.preventDefault(); crByExcercise()}}>Correct rates by exercise</button>  
